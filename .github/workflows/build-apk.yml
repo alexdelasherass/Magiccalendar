@@ -27,6 +27,20 @@ jobs:
           mkdir proyecto
           unzip -q Alex_Magia_App_con_compilacion.zip -d proyecto
 
+      - name: Configurar AndroidX
+        run: |
+          touch proyecto/gradle.properties
+          if grep -q '^android.useAndroidX=' proyecto/gradle.properties; then
+            sed -i 's/^android.useAndroidX=.*/android.useAndroidX=true/' proyecto/gradle.properties
+          else
+            echo 'android.useAndroidX=true' >> proyecto/gradle.properties
+          fi
+          if grep -q '^android.enableJetifier=' proyecto/gradle.properties; then
+            sed -i 's/^android.enableJetifier=.*/android.enableJetifier=true/' proyecto/gradle.properties
+          else
+            echo 'android.enableJetifier=true' >> proyecto/gradle.properties
+          fi
+
       - name: Configurar JVM 17
         run: |
           cat > proyecto/jvm17.init.gradle <<'EOF'
