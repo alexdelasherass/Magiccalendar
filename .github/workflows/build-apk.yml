@@ -17,10 +17,20 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      - name: Preparar Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.10.2'
+
       - name: Descomprimir proyecto
         run: |
           mkdir proyecto
           unzip -q Alex_Magia_App_con_compilacion.zip -d proyecto
+
+      - name: Configurar AndroidX
+        run: |
+          echo "android.useAndroidX=true" > proyecto/gradle.properties
+          echo "android.enableJetifier=true" >> proyecto/gradle.properties
 
       - name: Compilar APK
         working-directory: proyecto
