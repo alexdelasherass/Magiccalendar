@@ -1,0 +1,34 @@
+name: Construir APK Alex Magia
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Preparar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Descomprimir proyecto
+        run: |
+          mkdir proyecto
+          unzip -q Alex_Magia_App_con_compilacion.zip -d proyecto
+
+      - name: Compilar APK
+        working-directory: proyecto
+        run: |
+          gradle assembleDebug --no-daemon
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AlexMagia-APK
+          path: proyecto/app/build/outputs/apk/debug/app-debug.apk
