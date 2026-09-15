@@ -33,25 +33,23 @@ jobs:
           echo "android.useAndroidX=true" >> proyecto/gradle.properties
           echo "android.enableJetifier=true" >> proyecto/gradle.properties
 
-      - name: Configurar Java y Kotlin a JVM 17
+      - 
+
+      - name: Compilar APK
+        working-directory: p      - name: Configurar Java y Kotlin a JVM 17
         run: |
-          cat > proyecto/jvm17.init.gradle <<'EOF'
-          allprojects {
-              tasks.withType(JavaCompile).configureEach {
+          gradle.allprojects {
+              tasks.withType(org.gradle.api.tasks.compile.JavaCompile).configureEach {
                   sourceCompatibility = '17'
                   targetCompatibility = '17'
               }
 
-              tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-                  kotlinOptions {
-                      jvmTarget = '17'
+              tasks.configureEach { task ->
+                  if (task.name.contains('Kotlin')) {
+                      task.kotlinOptions.jvmTarget = '17'
                   }
               }
-          }
-          EOF
-
-      - name: Compilar APK
-        working-directory: proyecto
+          }royecto
         run: |
           gradle -I jvm17.init.gradle assembleDebug --no-daemon
 
