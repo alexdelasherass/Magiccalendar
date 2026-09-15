@@ -27,15 +27,21 @@ jobs:
           mkdir proyecto
           unzip -q Alex_Magia_App_con_compilacion.zip -d proyecto
 
-      - name: Configurar AndroidX
+      - name: Configurar JVM 17
         run: |
-          echo "android.useAndroidX=true" > proyecto/gradle.properties
-          echo "android.enableJetifier=true" >> proyecto/gradle.properties
+          cat > proyecto/jvm17.init.gradle <<'EOF'
+          allprojects {
+              tasks.withType(JavaCompile).configureEach {
+                  sourceCompatibility = '17'
+                  targetCompatibility = '17'
+              }
+          }
+          EOF
 
       - name: Compilar APK
         working-directory: proyecto
         run: |
-          gradle assembleDebug --no-daemon
+          gradle -I jvm17.init.gradle assembleDebug --no-daemon
 
       - name: Guardar APK
         uses: actions/upload-artifact@v4
