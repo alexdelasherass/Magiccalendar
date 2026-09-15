@@ -26,7 +26,7 @@ jobs:
         run: |
           rm -rf proyecto
           mkdir proyecto
-          unzip -q Alex_Magia_App_con_compilacion.zip -d proyecto
+          unzip -q Alex_Magia_App_V2.zip -d proyecto
 
       - name: Configurar AndroidX y Java 17
         run: |
