@@ -30,24 +30,22 @@ jobs:
       - name: Configurar AndroidX
         run: |
           touch proyecto/gradle.properties
-          if grep -q '^android.useAndroidX=' proyecto/gradle.properties; then
-            sed -i 's/^android.useAndroidX=.*/android.useAndroidX=true/' proyecto/gradle.properties
-          else
-            echo 'android.useAndroidX=true' >> proyecto/gradle.properties
-          fi
-          if grep -q '^android.enableJetifier=' proyecto/gradle.properties; then
-            sed -i 's/^android.enableJetifier=.*/android.enableJetifier=true/' proyecto/gradle.properties
-          else
-            echo 'android.enableJetifier=true' >> proyecto/gradle.properties
-          fi
+          echo "android.useAndroidX=true" >> proyecto/gradle.properties
+          echo "android.enableJetifier=true" >> proyecto/gradle.properties
 
-      - name: Configurar JVM 17
+      - name: Configurar Java y Kotlin a JVM 17
         run: |
           cat > proyecto/jvm17.init.gradle <<'EOF'
           allprojects {
               tasks.withType(JavaCompile).configureEach {
                   sourceCompatibility = '17'
                   targetCompatibility = '17'
+              }
+
+              tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+                  kotlinOptions {
+                      jvmTarget = '17'
+                  }
               }
           }
           EOF
